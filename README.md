@@ -148,3 +148,6 @@ public function __construct()
         $this->middleware('jwt.auth', ['except' => ['login', 'loginCheck']]);
     }
 </code>
+
+
+
