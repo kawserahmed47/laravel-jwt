@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\JwtPayloadController;
 use App\Http\Controllers\LoginController;
 use Illuminate\Support\Facades\Route;
 
@@ -21,15 +22,16 @@ Route::get('/', function () {
 
 Route::get('/login', [LoginController::class, 'login'])->name('login');
 Route::post('/loginCheck', [LoginController::class, 'loginCheck'])->name('loginCheck');
+Route::get('/invalid-token/{message}', [LoginController::class, 'invalidToken'])->name('invalidToken');
 
 
 
 Route::group(['middleware' => 'jwt.auth'], function () {
 
-    Route::get('/logout', [LoginController::class, 'logout'])->name('logout');
     Route::get('/dashboard/{token}', [DashboardController::class, 'dashboard'])->name('dashboard');
 
 
 });
+Route::get('/logout', [LoginController::class, 'logout'])->name('logout');
+Route::get('/jwt-payload/{token}', [JwtPayloadController::class, 'getJwtPayload'])->name('jwt.payload')->middleware('jwtAuth');
 
-// Route::get('/dashboard', [DashboardController::class, 'dashboard'])->name('dashboard')->middleware('jwt.auth');

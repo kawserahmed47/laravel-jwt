@@ -14,7 +14,7 @@ class LoginController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('jwt.auth', ['except' => ['login', 'loginCheck']]);
+        $this->middleware('jwt.auth', ['except' => ['login', 'logout', 'loginCheck', 'invalidToken']]);
     }
 
 
@@ -33,7 +33,7 @@ class LoginController extends Controller
                 'baz' => 'bob'
             ];
 
-            $myTTL = 5; //minute
+            $myTTL = 50; //minute
             
             $payload = JWTFactory::sub($user->id)
                         ->myCustomString('Foo Bar')
@@ -44,7 +44,7 @@ class LoginController extends Controller
 
             $token = JWTAuth::fromUser($user,$payload);
 
-            Session::flash('message', "Email or password do not match!");
+            Session::flash('message', "Login Successfully!");
 
             return  redirect()->route('dashboard',$token);
         }else{
@@ -59,6 +59,10 @@ class LoginController extends Controller
     public function logout(){
         Auth::logout();
         return redirect()->route('login');
+    }
+
+    public function invalidToken($message){
+        return view('auth.invalid')->with(array('message'=>$message));
     }
 
 
